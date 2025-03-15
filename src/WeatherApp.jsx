@@ -14,7 +14,10 @@ export const WeatherApp = () => {
         try{
             const response = await fetch(`${urlBase}?q=${city}&appid=${API_KEY}&lang=es`);
             const data = await response.json();
-            setWeatherData(data);
+            
+            if(response.ok){
+                setWeatherData(data);
+            }
         } catch (error) {
             console.log('Hubo un error: ', error)
         }
@@ -23,7 +26,6 @@ export const WeatherApp = () => {
     const handleSubmit = (event) => {
         event.preventDefault()
         fetchWeatherData();
-        console.log(weatherData)
     }
 
     const handleCityChange = (event) => {
@@ -42,7 +44,7 @@ export const WeatherApp = () => {
                 />
                 <button type='submit'>Buscar</button>
             </form>
-            {weatherData && (
+            {weatherData ? (
                 <div>
                     <h2>{weatherData.name}, {weatherData.sys.country}</h2>
                     <p>La Temperatura actual es: {Math.floor(weatherData.main.temp - difKelvin)}°C</p>
@@ -52,7 +54,9 @@ export const WeatherApp = () => {
                         alt={weatherData.weather[0].description}
                     />  
                 </div>
-            )}
+            ):
+            <p>No hay datos para mostrar</p>
+            }
         </div>
     )
 }
